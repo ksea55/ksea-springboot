@@ -1,9 +1,13 @@
 package org.ksea.springboot.repository;
 
 import org.ksea.springboot.model.Student;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
 
 import java.util.List;
 
@@ -29,5 +33,12 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
     Student findById(Integer id);
 
     long countByAge(Integer age);
+
+
+    //分页
+    Page<Student> findByAge(int age, Pageable pageable);
+
+    //排序
+    List<Student> findByAge(int age, Sort sort);
 
 }

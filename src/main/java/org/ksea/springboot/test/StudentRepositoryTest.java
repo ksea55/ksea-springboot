@@ -10,7 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
 
 /**
  * Created by mexican on 2017/4/19.
@@ -21,6 +26,36 @@ public class StudentRepositoryTest {
 
     @Autowired
     private StudentRepository studentRepository;
+
+    @Test
+    public void pager() {
+
+        //page在springdata中 第一页是从下标0开始的
+        int page = 1 - 1; //第一页
+        int pagesize = 2;
+        //根据年龄简单分页
+        PageRequest pageRequest = new PageRequest(page, pagesize);
+        Page<Student> students = studentRepository.findByAge(23, pageRequest);
+        System.out.println(students.getTotalElements()); //总条数
+        System.out.println(students.getTotalPages()); //总页数
+        System.out.println(students.getContent()); //元素集合
+        System.out.println((students.getNumber() + 1)); //当前第几页 ，因为第一页是从0开始的所以这里要加1
+        System.out.println(students.getNumberOfElements()); //当前元素的个数
+        System.out.println(students.getSize()); //页大小
+
+
+        //排序
+        Sort.Order order = new Sort.Order(Sort.Direction.DESC, "id");
+        Sort sort = new Sort(order);
+        List<Student> studentSortList = studentRepository.findByAge(23, sort);
+        System.out.println(studentSortList);
+
+        //分页有排序
+
+        pageRequest = new PageRequest(page, pagesize, sort);
+        students = studentRepository.findByAge(23, pageRequest);
+        System.out.println(students.getContent());
+    }
 
     @Test
     public void count() {
